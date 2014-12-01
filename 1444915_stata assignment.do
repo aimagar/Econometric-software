@@ -25,7 +25,7 @@ ivreg lwage (educ=nearc4 nearc2) exper expersq black south smsa reg661-reg668 sm
 reg IQ nearc4
 
 **f)**
-*First, we regress iq on nearc4 along with smsa66, reg661, reg662 and reg669 using OLS:
+*First, we regress iq on nearc4 along with smsa66, reg661, reg662 and reg669 using OLS
 reg IQ nearc4 smsa66 reg661 reg662 reg669
 
 *Then, compute the partial correlations
