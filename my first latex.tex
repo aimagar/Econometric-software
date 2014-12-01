@@ -1,0 +1,98 @@
+\documentclass[a4paper, 12pt] {article}
+%this is a comment
+\usepackage{color}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\begin{document}
+\title{hola}
+\date{$12^{th}$ November, 2014}
+\author{aixa\\
+learning center,\\
+LG,\\
+Uni of Birmingham\\
+aixa@gr}
+\maketitle
+\newpage
+\begin{abstract}my first latx gggggggggggg
+\end{abstract}
+\newpage
+\tableofcontents
+\newpage
+\part{jjjjjjj}
+\section{text and characters}
+\subsection{bold}
+
+\subsection{italics}
+\subsection{texit}
+\textit{jjj}
+\subsection{emph}
+\emph{ggg}
+\subsection{typewritter}
+\texttt{jjjj}
+\subsection{underline}
+ggggggg\underline{jjj}
+\subsection{colors}
+\begin{color}
+{red}{jjj}
+\end{color}
+\subsection{lists}
+\subsubsection{itemlist}
+\begin{itemize}
+
+\item{b}
+{\setlength\itemindent{25pt}}
+\item{f}
+
+\end{itemize}
+\begin{enumerate}
+\item{b}
+\item{f}
+\end{enumerate}
+
+\section{mahs}
+the forst way to write maths in \LaTeX is in-line like this:
+$a^2+b^2+c^2$
+\begin{equation}\label{ols}
+\hat{\omega}=(x'x)^{-1}x'y
+\end{equation}
+\section{analysis}
+we can use ols estimator shown in equation 
+\ref{ols}
+\begin{equation}
+\lim_{n \to \infty}
+\sum_{k=1}^n \frac{1}{k^2}
+=\frac{\pi^2}{6}
+\end{equation}
+\begin{equation*}
+\mathbf{x} = \left(
+\begin{array}{ccc}
+a & b & \ldots \\
+b & c & \ldots \\
+c & d & \ldots \\
+\end{array}\right)
+\end{equation*}
+
+
+
+\section{table}
+\begin{center}
+\begin{table}[!h]
+\caption{our first table}
+\vspace{0.15in}
+\begin{tabular}{c | c | c | c}
+subject & difficulty & fun & use\\ \hline
+econo & 7 & 8 & 7\\
+econo & 7 & 8 & 7\\
+econo & 7 & 8 & 7\\
+econo & 7 & 8 & 7\\
+\end{tabular}
+\end{table}
+\end{center}
+
+\section{citation}
+\cite{william}
+\bibliographystyle{apalike}
+\bibliography{mybib}
+
+\end{document}
