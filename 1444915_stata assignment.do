@@ -28,5 +28,5 @@ reg IQ nearc4
 *First, we regress iq on nearc4 along with smsa66, reg661, reg662 and reg669 using OLS:
 reg IQ nearc4 smsa66 reg661 reg662 reg669
 
-*Then, compute the partially correlations
+*Then, compute the partial correlations
 pcorr IQ nearc4 smsa66 reg661 reg662 reg669
