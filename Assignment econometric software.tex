@@ -1,0 +1,225 @@
+\documentclass[a4paper, 12pt, twoside]{article}
+
+\usepackage{amsmath}
+\usepackage[margin=2cm]{geometry}
+\usepackage{array}
+\usepackage{tabu}
+\usepackage{booktabs,caption,fixltx2e}
+\usepackage[flushleft]{threeparttable}
+\usepackage{tocloft}
+\usepackage{etoolbox}
+\usepackage{indentfirst}
+\usepackage{titlesec}
+\usepackage{natbib}
+\usepackage{hyperref}
+\usepackage[all]{hypcap}
+
+
+\newenvironment{subs}
+  {\adjustwidth{3em}{0pt}}
+  {\endadjustwidth}
+
+\renewcommand*\contentsname{Table of contents}
+\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
+\titleformat*{\subsection}{\normalsize\bfseries}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    filecolor=black,      
+    urlcolor=black,
+citecolor=black,
+}
+
+
+\begin{document}
+\pagenumbering{gobble}
+\thispagestyle{empty}
+\title{Introduction to Econometric Software\\
+-Stata assignment-}
+\author{1444915}
+\date{5 December 2014}
+\maketitle
+\newpage
+
+\pagenumbering{arabic}
+\setcounter{page}{2}
+
+\tableofcontents{}
+\addtocontents{toc}{\vspace{0.5em}}
+\newpage
+
+
+
+
+\section*{Question 5.4 Wooldridge}
+\addcontentsline{toc}{section}{\protect\numberline{}Question 5.4 Wooldridge}
+\addtocontents{toc}{\vspace{1.5em}}
+
+
+
+\subsection*{a) Estimate a log(\textit{wage}) equation by OLS with \textit{educ}, \textit{exper}, \textit{exper2}, \textit{black}, \textit{south}, \textit{smsa}, \textit{reg661} through \textit{reg668} and \textit{smsa66} as explanatory variables. Compare your results with Table 2, Column (2) in \cite{Card}.}
+\addcontentsline{toc}{subsection}{\protect\numberline{}Section a)}
+\addtocontents{toc}{\vspace{1em}}
+
+The log($wage$) equation is given by the following expression:
+\begin{equation*}
+\begin{split}
+log(wage)=&\beta_0+\beta{_1}educ+\beta{_2}exper+\beta{_3}expersq+\beta{_4}black+\beta{_5}south\\
+&+\beta{_6}smsa+\beta{_7}region+\beta{_8}smsa66+u, 
+\end{split}
+\end{equation*}
+where $region$ includes a set of regional dummies referring to 1966: $reg661$-$reg668$. 
+\par\vspace{\baselineskip}
+Results are shown in table 1, column (1). They are the same as those reported in table 2, column (2) in \cite{Card}. The estimated return to education is approximately 7.47\% (coefficient on $educ$). It is statistically significant at the 1\% significance level. Regarding the control variables, results are mixed. For instance, experience follows an inverted U-shape, that is, $wage$ increases along with experience up to a certain point from which it declines. As one might expect, the estimated coefficients of $black$ and $south$ are negative, which means that black men (the sample only includes men) and those living in Southern states have, on average, a lower $wage$. The regional dummies show mixed results. Only the estimated coefficients on regions 661, 664 and 668 are statistically significant. They have a negative sign, which shows that those individuals living in regions 661, 664 and 668 in 1966 have, on average, a lower $wage$. Finally, living in a SMSA (Standard Metropolitan Statistical Area) in 1976 is significantly correlated with a higher $wage$, but insignificantly if living in a SMSA in 1966. 
+\par\vspace{\baselineskip}
+\subsection*{b) Estimate a reduced form equation for \textit{educ} containing all explanatory variables from part a and the dummy variable \textit{nearc4}. Do \textit{educ} and \textit{nearc4} have a practically and statistically significant partial correlation? [See also Table 3, Column (1) in \cite{Card}.]}
+\addcontentsline{toc}{subsection}{\protect\numberline{}Section b)}
+\addtocontents{toc}{\vspace{1em}}
+
+The reduced form for $educ$ is given by the following equation:
+\begin{equation*}
+\begin{split}
+educ=&\delta_0+\delta{_1}exper+\delta{_2}expersq+\delta{_3}black+\delta{_4}south+\delta{_5}smsa\\
+&+\delta{_6}region+\delta{_7}smsa66+\delta{_8}nearc4+v, 
+\end{split}
+\end{equation*}
+Results are shown in table 1, column (2). The estimated coefficient and standard error of $nearc4$ are the same as those in table 3, column (1) in \cite{Card}. Moreover, unlike Card, we compute the partial correlation between $educ$ and  $nearc4$. The partial correlation measures the degree of correlation between two variables once the effect of the other variables has been removed. The results show that $educ$ and $nearc4$ have a positive and statistically significant partial correlation (partial correlation=0.066 and p-value=0.0003). However, this value is quite low and, therefore, it does not show a practically significant correlation. In particular, living near a 4-year college in 1966 is only correlated with 0.066 years more of schooling in 1976. If we had only looked at the estimated coefficient of the reduced form regression, we would have concluded that there is a practically significant correlation between these two variables, since the coefficient is almost five times 0.066, concretely 0.32.
+\par\vspace{\baselineskip}
+
+
+\subsection*{c) Estimate the log(\textit{wage}) equation by IV, using \textit{nearc4} as an instrument for \textit{educ}. Compare the 95 percent confidence interval for the return to education with that obtained from part a. [See also Table 3, Column (5) in \cite{Card}.]}
+\addcontentsline{toc}{subsection}{\protect\numberline{}Section c)}
+\addtocontents{toc}{\vspace{1em}}
+
+We can estimate the log($wage$) equation through two procedures in stata. On the one hand, we can manually do the two stages from the 2SLS method. That is, we first estimate the reduced form for $educ$ stated in part b by OLS and calculate the fitted value of $educ$. In a second stage, we run the second-stage regression by OLS: we regress log($wage$) on the set of exogenous explanatory variables in the structural model and the predicted value of $educ$ from the first-stage regression. On the other hand, we can directly estimate the log($wage$) equation by IV using $nearc4$ as an instrument for $educ$. Both methods lead to the same estimates, but the standard errors from the first procedure are not valid, since we are using a generated regressor in the second-stage estimation. Threfore, since we need to obtain a valid confidence interval for the return to education, we are going to use the second method. 
+\par\vspace{\baselineskip}
+We estimate the following equation by IV:
+\begin{equation*}
+\begin{split}
+l(wage)=&\beta_0+\beta{_1}educ+\beta{_2}exper+\beta{_3}expersq+\beta{_4}black+\beta{_5}south\\
+&+\beta{_6}smsa+\beta{_7}region+\beta{_8}smsa66+u
+\end{split}
+\end{equation*}
+Results are shown in table 1, column (3). We obtain the same results as in table 3, column (5) in \cite{Card}. The estimated coefficient is now larger (13.15\%) than in part a. It is also statistically significant, but now at the 5\% significance level.
+\par\vspace{\baselineskip}
+
+The 95\% confidence interval for the return to education in part c is [0.0237334,0.2392742], while in part a was  [0.0678338,0.0815527]. As can be seen, it is much wider in part c than in part a. A 95\% confidence interval means that, in repeated samples, the population parameter will lie within the bounds of the confidence interval 95\% of the times. The 95\% confidence interval is given by $\hat{\beta}_j\pm c*se(\hat{\beta}_j)$, where $c$ equals the $(1-(5\%/2))$ percentile in a $t_{n-k-1}$ distribution. As can be seen, the standard error appears in the computation of the confidence interval. Therefore, since IV standard errors are generally higher and never smaller than those of OLS (they are equal only when the $R^2_{x,z}$ appearing in the variance formula is equal to one, but this is not common in practice), the confidence interval of $educ$ in the IV estimation has wider bounds than that of OLS. This implies that precision is lower and uncertainty of the unknown population parameter higher.
+\par\vspace{\baselineskip}
+
+\subsection*{d) Now use \textit{nearc2} along with \textit{nearc4} as instruments for \textit{educ}. First estimate the reduced form for \textit{educ}, and comment on whether \textit{nearc2} or \textit{nearc4} is more strongly related to \textit{educ}. How do the 2SLS estimates compare with the earlier estimates?}
+\addcontentsline{toc}{subsection}{\protect\numberline{}Section d)}
+\addtocontents{toc}{\vspace{1em}}
+
+The reduced form for $educ$ is given by the following equation:
+\begin{equation*}
+\begin{split}
+educ=&\delta_0+\delta{_1}exper+\delta{_2}expersq+\delta{_3}black+\delta{_4}south+\delta{_5}smsa\\
+&+\delta{_6}region+\delta{_7}smsa66+\delta{_8}nearc4+\delta{_9}nearc2+v
+\end{split}
+\end{equation*}
+Results are shown in table 1, column (4). $nearc4$ is more strongly related to $educ$ than $nearc2$. Indeed, only the estimated coefficient of $nearc4$ is statistically significant. It has a positive sign. 
+\par\vspace{\baselineskip}
+
+We now obtain the 2SLS estimates. The equation to estimate is the same as in part c, but now we include two instrumental variables, $nearc2$ and $nearc4$:
+\begin{equation*}
+\begin{split}
+l(wage)=&\beta_0+\beta{_1}educ+\beta{_2}exper+\beta{_3}expersq+\beta{_4}black+\beta{_5}south\\
+&+\beta{_6}smsa+\beta{_7}region+\beta{_8}smsa66+u
+\end{split}
+\end{equation*}
+Results are shown in table 1, column (5). Compared to part a, where a simple OLS estimation method was used, and c, where only $nearc4$ was used as an instrument, now $educ$ has a larger estimated coefficient (15.71\% versus 13.15\% in part c and 7.47\% in part a). Therefore, when $nearc2$ and $nearc4$ are included as instruments, the return to education is, on average, 15.71\%, that is, one year more of education is associated with a 15.71\% increase in $wage$. Regarding the estimated coefficients of the other variables, those in parts c and d are very similar and have the same sign and significance. Compared to part a, the direction of the sign is the same and the significance only changes for reg664, which becomes insignificant in parts c and d. The different estimates between using IV and OLS show that it is likely that $educ$ suffers from endogeneity and, therefore, the estimates from OLS might be biased and inconsistent. 
+\par\vspace{\baselineskip}
+
+
+\subsection*{e) For a subset of the men in the sample, IQ score is available. Regress \textit{iq} on \textit{nearc4}. Is IQ score uncorrelated with \textit{nearc4}?}
+\addcontentsline{toc}{subsection}{\protect\numberline{}Section e)}
+\addtocontents{toc}{\vspace{1em}}
+
+We estimate the following model by OLS:
+\begin{equation*}
+iq=\alpha_0+\alpha{_1}nearc4+\epsilon
+\end{equation*}
+Results are shown in table 1, column (6). IQ score is significantly correlated with $nearc4$ at the 1\% level. $iq$ has been used in the labour economics literature as a proxy for ability, which is the unobserved variable likely to be causing the potential endogeneity of $educ$. On the other hand, $nearc4$ is used in this model as an instrument for $educ$. Threfore, both $iq$ and $nearc4$ are trying to solve the same problem.
+\par\vspace{\baselineskip}
+
+\subsection*{f) Now regress \textit{iq} on \textit{nearc4} along with \textit{smsa66}, \textit{reg661}, \textit{reg662}, and \textit{reg669}. Are \textit{iq} and \textit{nearc4} partially correlated? What do you conclude about the importance of controlling for the 1966 location and regional dummies in the log(\textit{wage}) equation when using \textit{nearc4} as an IV for \textit{educ}?}
+\addcontentsline{toc}{subsection}{\protect\numberline{}Section f)}
+\addtocontents{toc}{\vspace{1em}}
+
+First, we estimate the following model by OLS:
+\begin{equation*}
+iq=\alpha_0 + \alpha{_1}nearc4  + \alpha{_2}smsa66 + \alpha{_3}reg661 + \alpha{_4}reg662 + \alpha{_5}reg669 + \epsilon
+\end{equation*}
+Results are shown in table 1, column (7). The coefficient on $nearc4$ is now not statistically significant.  
+\par\vspace{\baselineskip}
+Second, we compute the partial correlation between $iq$ and $nearc4$. The result shows that $iq$ and $nearc4$ are not partially correlated. When using $nearc4$ as an IV for $educ$ in the log($wage$) equation, 1966 location and most of the regional dummies are not statistically significant, thus it is not very important contolling for them. Only region 661 and region 668 are statistically significant and they are negatively related to wages. This shows that those individuals living in these regions in 1966 have, on average, a lower wage by the simple fact of having lived in those regions.
+
+\begin{table*}
+\begin{center}
+\caption{\textbf{Estimated regression results}}
+\vspace{0.15in}
+\begin{tabular}{lccccccc} \hline
+ & (1) & (2) & (3) & (4) & (5) & (6) & (7) \\
+Variables & lwage & educ & lwage & educ & lwage & IQ & IQ \\ \hline
+ &  &  &  &  &  &  &  \\
+educ & 0.0747*** &  & 0.132** &  & 0.157*** &  &  \\
+ & (0.00350) &  & (0.0550) &  & (0.0526) &  &  \\
+exper & 0.0848*** & -0.413*** & 0.108*** & -0.412*** & 0.119*** &  &  \\
+ & (0.00662) & (0.0337) & (0.0237) & (0.0337) & (0.0228) &  &  \\
+expersq & -0.00229*** & 0.000869 & -0.00233*** & 0.000848 & -0.00236*** &  &  \\
+ & (0.000317) & (0.00165) & (0.000333) & (0.00165) & (0.000348) &  &  \\
+black & -0.199*** & -0.936*** & -0.147*** & -0.945*** & -0.123** &  &  \\
+ & (0.0182) & (0.0937) & (0.0539) & (0.0939) & (0.0522) &  &  \\
+south & -0.148*** & -0.0516 & -0.145*** & -0.0419 & -0.143*** &  &  \\
+ & (0.0260) & (0.135) & (0.0273) & (0.136) & (0.0284) &  &  \\
+smsa & 0.136*** & 0.402*** & 0.112*** & 0.401*** & 0.101*** &  &  \\
+ & (0.0201) & (0.105) & (0.0317) & (0.105) & (0.0315) &  &  \\
+reg661 & -0.119*** & -0.210 & -0.108*** & -0.169 & -0.103** &  & 4.768*** \\
+ & (0.0388) & (0.202) & (0.0418) & (0.204) & (0.0434) &  & (1.547) \\
+reg662 & -0.0222 & -0.289** & -0.00705 & -0.269* & -0.000229 &  & 5.808*** \\
+ & (0.0283) & (0.147) & (0.0329) & (0.148) & (0.0338) &  & (0.902) \\
+reg663 & 0.0260 & -0.238* & 0.0404 & -0.190 & 0.0470 &  &  \\
+ & (0.0274) & (0.143) & (0.0318) & (0.146) & (0.0326) &  &  \\
+reg664 & -0.0635* & -0.0931 & -0.0579 & -0.0377 & -0.0554 &  &  \\
+ & (0.0357) & (0.186) & (0.0376) & (0.189) & (0.0392) &  &  \\
+reg665 & 0.00946 & -0.483** & 0.0385 & -0.437** & 0.0515 &  &  \\
+ & (0.0361) & (0.188) & (0.0469) & (0.190) & (0.0476) &  &  \\
+reg666 & 0.0219 & -0.513** & 0.0551 & -0.502** & 0.0700 &  &  \\
+ & (0.0401) & (0.210) & (0.0527) & (0.210) & (0.0533) &  &  \\
+reg667 & -0.000589 & -0.427** & 0.0268 & -0.378* & 0.0391 &  &  \\
+ & (0.0394) & (0.206) & (0.0488) & (0.208) & (0.0497) &  &  \\
+reg668 & -0.175*** & 0.314 & -0.191*** & 0.382 & -0.198*** &  &  \\
+ & (0.0463) & (0.242) & (0.0507) & (0.245) & (0.0525) &  &  \\
+smsa66 & 0.0262 & 0.0255 & 0.0185 & 7.82e-05 & 0.0151 &  & 1.355* \\
+ & (0.0194) & (0.106) & (0.0216) & (0.107) & (0.0223) &  & (0.803) \\
+nearc4 &  & 0.320*** &  & 0.321*** &  & 2.596*** & 0.868 \\
+ &  & (0.0879) &  & (0.0878) &  & (0.745) & (0.822) \\
+nearc2 &  &  &  & 0.123 &  &  &  \\
+ &  &  &  & (0.0774) &  &  &  \\
+reg669 &  &  &  &  &  &  & 1.845 \\
+ &  &  &  &  &  &  & (1.152) \\
+Constant & 4.739*** & 16.85*** & 3.774*** & 16.77*** & 3.340*** & 100.6*** & 99.38*** \\
+ & (0.0715) & (0.211) & (0.935) & (0.216) & (0.895) & (0.627) & (0.702) \\
+ &  &  &  &  &  &  &  \\
+Observations & 3,010 & 3,010 & 3,010 & 3,010 & 3,010 & 2,061 & 2,061 \\
+ R-squared & 0.300 & 0.477 & 0.238 & 0.478 & 0.170 & 0.006 & 0.030 \\ \hline
+\multicolumn{8}{l}{\footnotesize{Note: columns (1), (2), (4), (6) and (7) are estimated using OLS, columns (3) and (4) are estimated using 2SLS. \par}} \\
+\multicolumn{8}{l}{\footnotesize{Standard errors in parentheses. Significance levels: *** p$<$0.01, ** p$<$0.05, * p$<$0.1 \par}} \\
+\end{tabular}
+\end{center}
+\end{table*}
+
+\newpage
+\section*{Link to GitHub}
+\addcontentsline{toc}{section}{\protect\numberline{}Link to GitHub}
+\addtocontents{toc}{\vspace{1.5em}}
+You can find the do.file in this \href{https://github.com/aimagar/assignment}{link} or you can access through the URL: \url{https://github.com/aimagar/assignment}
+
+\newpage
+
+\bibliographystyle{apa-good}
+\bibliography{Listofreferences}
+\addcontentsline{toc}{section}{\protect\numberline{}References}
+
+\end{document}
